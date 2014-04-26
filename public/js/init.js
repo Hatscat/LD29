@@ -23,7 +23,6 @@ function init_game () {
 	var canvas = document.createElement('canvas');
 	var config = new_config(canvas);
 
-	document.body.appendChild(canvas);
 	manage_input_events(config.keys_down);
 	manage_server_events(config);
 	config.socket.emit('new', sessionStorage.getItem('id'));
@@ -46,6 +45,7 @@ function init_game () {
 		config.gl.vertexAttribPointer(pLocation, 2, config.gl.FLOAT, false, 0, 0);
 
 		run(config, config.time);
+		document.body.appendChild(canvas);
 	},
 	function (url) {
 		console.log('Failed to download "' + url + '"');
@@ -55,7 +55,9 @@ function init_game () {
 ** set keyboard inputs into config
 */
 function manage_input_events (p_keys_down) {
+
 	addEventListener('keydown', function (e) {
+		console.log(e.keyCode);
 		p_keys_down[e.keyCode] = true;
 	}, false);
 	addEventListener('keyup', function (e) {

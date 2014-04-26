@@ -3,27 +3,60 @@
 */
 function c_player (p_id, p_config) {
 
-	var that 		= this;
-	
+	//var that 		= this;
+
 	/*
 	** attributs
 	*/
-	this._id 		= p_id;
 	this._config 	= p_config;
-	this.x 			= p_config.player_position.x;
-	this.y 			= p_config.player_position.y;
-	this.z 			= p_config.player_position.z;
+	this.id 		= p_id;
+	this.x 			= this._config.player_initial_position.x;
+	this.y 			= this._config.player_initial_position.y;
+	this.z 			= this._config.player_initial_position.z;
+	this.radius 	= this._config.player_radius;
+
 }
 
 /*
 ** methods
 */
-c_player.prototype._private_methods = function (p_) {
+c_player.prototype._move = function () {
 
+	var speed = this._config.player_velocity * this._config.delta_time;
+	//this.x = ... * speed;
 
+	for (var i1 in this._config[this._config.keys_config])
+	{
+		if (this._config.keys_down[this._config[this._config.keys_config][i1]])
+		{
+
+			console.log(i1);
+
+			switch (i1)
+			{
+				case 'up' :
+					this.z += speed;
+				break;
+				case 'down' :
+					this.z -= speed;
+				break;
+				case 'left' :
+
+				break;
+				case 'right' :
+
+				break;
+				case 'jump' :
+
+				break;
+			}
+		}
+	}
+
+	my_player_move(this._config); // event server
 };
 
-c_player.prototype.public_methods = function (p_) {
+c_player.prototype.update = function () {
 
-
+	this._move();
 };

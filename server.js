@@ -29,8 +29,8 @@ function on_connection (p_socket, p_data) {
 	//players[ip] = true;
 	
 	p_socket.cli_id = p_data ? p_data : p_socket.id;
-	players[p_socket.cli_id] = true;
 	io.sockets.emit('new', [p_socket.cli_id, players]);
+	players[p_socket.cli_id] = true;
 	console.log('--- player ' + p_socket.cli_id + ' is connected ---');
 }
 

@@ -3,22 +3,24 @@
 */
 function new_player (p_config, p_data) {
 
-	p_config.myID = p_config.myID || p_data[0];
-
-	if (!sessionStorage.getItem('id'))
-	{
-		sessionStorage.setItem('id', p_config.myID);
-	}
-
 	console.log('data', p_data);
 
-	for (var i in p_data[1])
-	{
-		if (p_data[1][i] && !p_config.players[p_data[1][i]])
+	if (p_config.player) {
+
+		p_config.ghosts[p_data[0]] = new c_ghost(p_data[0], p_config);
+
+	} else {
+
+		p_config.player = new c_player(p_data[0], p_config);
+		sessionStorage.setItem('id', p_config.player.id);
+
+		for (var i1 in p_data[1])
 		{
-			p_config.players[i] = new c_player(i);
+			if (p_data[1][i1] && p_data[0] != p_config.player.id)
+			{
+				p_config.ghosts[i1] = new c_ghost(i1, p_config);
+			}
 		}
-		console.log(i);
 	}
 	//console.log(p_config.players[p_data[0]]);
 }
@@ -27,22 +29,21 @@ function new_player (p_config, p_data) {
 */
 function update_an_ext_player (p_config, p_data) {
 
-	if (p_data[0] != p_config.myID) {
+	if (p_data[0] != p_config.player.id) {
 
 		console.log("player " + p_data[0] + " move !");
-		var p = p_config.players[p_data[0]];
-		p.x = p_data[1];
-		p.y = p_data[2];
+		var ghost = p_config.ghosts[p_data[0]];
+		ghost.x = p_data[1];
+		ghost.y = p_data[2];
+		ghost.z = p_data[3];
 	}
 }
 /*
 ** update my player obj
 */
-function my_player_move (p_config, p_data) {
+function my_player_move (p_config) {
 
-	p_config.players[p_config.myID].x = p_data.pageX - p_config.players[p_config.myID].w / 2;
-	p_config.players[p_config.myID].y = p_data.pageY - p_config.players[p_config.myID].h / 2;
-	p_config.socket.emit('move', [p_config.myID, p_config.players[p_config.myID].x, p_config.players[p_config.myID].y]);
+	p_config.socket.emit('move', [p_config.player.id, p_config.player.x, p_config.player.y, p_config.player.z]);
 }
 /*
 ** update a player
