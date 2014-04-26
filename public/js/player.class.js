@@ -10,11 +10,11 @@ function c_player (p_id, p_config) {
 	*/
 	this._config 	= p_config;
 	this.id 		= p_id;
-	this.x 			= this._config.player_initial_position.x;
-	this.y 			= this._config.player_initial_position.y;
-	this.z 			= this._config.player_initial_position.z;
-	this.Vector		= new Vector(this.x,this.y,this.z);
-	this.radius 	= this._config.player_radius;
+	this.x 			= this._config.player_params.initial_position.x;
+	this.y 			= this._config.player_params.initial_position.y;
+	this.z 			= this._config.player_params.initial_position.z;
+	this.Vector		= new Vector(this.x, this.y, this.z);
+	this.radius 	= this._config.player_params.radius;
 
 }
 
@@ -70,7 +70,7 @@ c_player.prototype._move = function (Vector) {
 };
 
 c_player.prototype.getMass = function() {
-	return _config.player_mass;
+	return this._config.player_mass;
 };
 
 

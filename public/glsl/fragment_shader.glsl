@@ -1,106 +1,7 @@
 #ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
+	precision highp float;
 #else
-precision mediump float;
-#endif
-
-varying vec2 coord;
-
-uniform float time;
-uniform float positionX;
-uniform float positionY;
-uniform float angle;
-
-uniform float pix2plot;
-uniform float cameraX;
-uniform float cameraY;
-uniform float cameraDx;
-uniform float cameraDy;
-
-vec2 pixelToPosition (vec2 pixelPos)
-{
-	return vec2(pixelPos.x * cameraDx + cameraX, pixelPos.y * cameraDy + cameraY);
-}
-
-float rand (vec2 coord)
-{
-	return fract(sin(dot(coord.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
-vec3 sky      = vec3(0.0);
-vec3 ground1  = vec3(1.0, 0.0, 0.0);
-vec3 ground2  = vec3(1.0);
-float dEcran  = 0.5;
-
-vec3 getPreciseColor (float x, float y)
-{
-	vec3 position = vec3(positionX, positionY, 2.0);
-	float dzPixel = y * 0.15;
-	float dyPixel = x * 0.15;
-
-	if (dzPixel == 0.0)
-	{
-		return sky;
-	}
-
-	float dxIntersectionSol = -(dEcran * (position.z / dzPixel)) + position.x;
-
-	if (dxIntersectionSol > position.x)
-	{
-		float dyIntersectionSol = position.y + (dxIntersectionSol - position.x) * dyPixel / dEcran;
-
-		if (mod(dxIntersectionSol, 2.0) < 1.0)
-		{
-			if (mod(dyIntersectionSol, 2.0) < 1.0)
-			{
-				return ground2;
-			}
-			else
-			{
-				return ground1;
-			}
-		}
-		else
-		{
-			if (mod(dyIntersectionSol, 2.0) < 1.0)
-			{
-				return ground1;
-			}
-			else
-			{
-				return ground2;
-			}
-		}
-	}
-	else
-	{
-		return sky;
-	}
-}
-
-vec3 getColor (float x, float y)
-{
-	vec3 color = vec3(0.0);
-	
-	for (int i=0; i < 5; i++)
-	{
-		color += getPreciseColor(x + rand(vec2(i, x + y)) * pix2plot, y + rand(vec2(i, y + x)) * pix2plot);
-	};
-
-	return color/5.0;
-}
-
-void main (void)
-{
-	vec2 pos   = pixelToPosition(coord);
-	vec3 color = getColor(pos.x, pos.y);
-	gl_FragColor = vec4(color, 1.0);
-}
-
-/* #ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
-precision mediump float;
+	precision mediump float;
 #endif
 
 varying vec2 coord;
@@ -111,93 +12,90 @@ uniform float positionY;
 uniform float positionZ;
 uniform float sphereX;
 uniform float sphereY;
-uniform float angle;
-
 uniform float pix2plot;
-uniform float cameraX;
-uniform float cameraY;
-uniform float cameraDx;
-uniform float cameraDy;
+
+/*************************************************************************/
+/*************************************************************************/
+/*************************************************************************/
+
+vec3 dark     = vec3(0.0);
+vec3 ground1  = vec3(1.0, 0.0, 0.0);
+vec3 ground2  = vec3(1.0);
+
+float angle 		= 0.0;
+float cameraDx		= 0.5;
+float cameraDy		= 2.0;
+float maxDistance 	= 60.0;
+float dEcran 		= 0.5;
+float sphereRadius 	= 1.9;
+float waveAmplitude = 0.2;
+float sphereZ 		= 1.01;
+
+vec3 position 		= vec3(positionX, positionY, positionZ);
+vec3 sphereCentre 	= vec3(sphereX, sphereY, sphereZ);
+
+/*************************************************************************/
+/*************************************************************************/
+/*************************************************************************/
 
 vec2 pixelToPosition(vec2 pixelPos) {
-return vec2(pixelPos.x * cameraDx + cameraX, pixelPos.y * cameraDy + cameraY);
+	return vec2(pixelPos.x * cameraDx, pixelPos.y * cameraDy);
 }
 
 float rand(vec2 coord) {
-return fract(sin(dot(coord.xy ,vec2(12.9898,78.233))) * 43758.5453);
+	return fract(sin(dot(coord.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
-vec3 sky      = vec3(0.0);
-vec3 ground1  = vec3(1.0, 0.0, 0.0);
-vec3 ground2  = vec3(1.0);
-float dEcran  = 0.5;
+float distanceField (in vec3 pos) {
 
-float distanceField (vec3 pos) {
-vec3 centre = vec3(sphereX, sphereY, 1.0);
-return min(length(pos - centre) - 2.0, pos.z - sin(pos.x + time)*sin(pos.y) * 0.2);
+	return min(length(pos - sphereCentre) - sphereRadius, pos.z - sin(pos.x + time) * sin(pos.y) * waveAmplitude);
 }
 
 
 vec3 getColor(float x, float y) {
-vec3 position = vec3(positionX, positionY, positionZ);
-vec3 dir = vec3(dEcran*cos(angle), dEcran*sin(angle), 0.0);
-dir += vec3(-x * 0.15 * sin(angle), x * 0.15 * cos(angle), y * 0.15);
-dir = normalize(dir);
 
-float d;
-bool max = true;
+	vec3 dir = vec3(dEcran*cos(angle), dEcran*sin(angle), 0.0);
+	dir += vec3(-x * 0.15 * sin(angle), x * 0.15 * cos(angle), y * 0.15);
+	dir = normalize(dir);
 
-for (int i=0; i < 100; i++) {
-d = distanceField(position);
-if (d < 0.01) {
-max = false;
-break;
-} else {
-position += d * dir;
-}
-};
+	float d = 0.0;
+	bool maxIterationsReached = true;
 
-if (max) {
-return sky;
-}
+	vec3 rayPosition = position;
 
-if (mod(position.x, 2.0) < 1.0) {
-if (mod(position.y, 2.0) < 1.0) {
-if (mod(position.z, 2.0) < 1.0) {
-return ground2;
-} else {
-return ground1;
-}
-} else {
-if (mod(position.z, 2.0) < 1.0) {
-return ground1;
-} else {
-return ground2;
-}
-}
-} else {
-if (mod(position.y, 2.0) < 1.0) {
-if (mod(position.z, 2.0) < 1.0) {
-return ground1;
-} else {
-return ground2;
-}
-} else {
-if (mod(position.z, 2.0) < 1.0) {
-return ground2;
-} else {
-return ground1;
-}
-}
+	for (int i=0; i < 200; i++) {
+
+		d = distanceField(rayPosition);
+		if (d < 0.01) {
+			maxIterationsReached = false;
+			break;
+		} else {
+			rayPosition += d * dir;
+		}
+		if (length(rayPosition - position) > maxDistance) {
+			return dark;
+		}
+	};
+
+	//return(vec3(0.5));
+	if (maxIterationsReached) {
+		return dark;
+	}
+
+	float distance = length(rayPosition - position);
+
+	float light    = min(1.0, 0.03 * pow(maxDistance / (distance + 0.1), 2.0));
+
+	if (mod(floor(mod(rayPosition.x, 2.0)) + floor(mod(rayPosition.y, 2.0)), 2.0) < 1.0) {
+		return ground1 * light;
+	} else {
+		return ground2 * light;
+	}
 }
 
-
-return vec3(0.5);
+void main (void) {
+	vec2 pos   = pixelToPosition(coord);
+	vec3 color = getColor(pos.x, pos.y);
+	gl_FragColor = vec4(color, 1.0);
 }
-
-void main(void) {
-vec2 pos   = pixelToPosition(coord);
-vec3 color = getColor(pos.x, pos.y);
-gl_FragColor = vec4(color, 1.0);
-}
- */
+    

@@ -11,8 +11,8 @@ function new_config (p_canvas) {
 		var webgl_context = p_canvas.getContext('webgl', webgl_options)
 						 || p_canvas.getContext('experimental-webgl', webgl_options);
 		var config = {
-			canvas_width 			: window.innerWidth / 2,
-			canvas_height 			: window.innerHeight / 2,
+			canvas_width 			: 300,//window.innerWidth,//960,
+			canvas_height 			: 300,//window.innerHeight,//570,
 			canvas 					: p_canvas,
 			gl 						: webgl_context,
 			socket 					: io.connect(),
@@ -25,18 +25,28 @@ function new_config (p_canvas) {
 			old_time 				: 0,
 			delta_time 				: 1,
 			gravity 				: 10,
-			keys_config 			: "azerty_keys",
+			keys_config 			: 'azerty_keys',
 			player_params : {
 					radius 			: 10,
 					velocity 		: 0,
 					speed 			: 2,
-					mass		 	: 45
+					mass		 	: 45,
+					initial_position : {
+						x 			: 0,
+						y 			: 0,
+						z 			: 2
+				},
 			},
 			ball_params : {
 					radius 			: 3,
 					velocity 		: 0,
 					speed 			: 2,
-					mass		 	: 1
+					mass		 	: 1,
+					initial_position : {
+						x 			: 0,
+						y 			: 0,
+						z 			: 2
+				},
 			},
 			net_params : {
 					height 			: 5,
@@ -45,16 +55,6 @@ function new_config (p_canvas) {
 						y			: 0,
 						z 			: 1
 					}
-			},
-			player_initial_position : {
-				x 	: 0,
-				y 	: 0,
-				z 	: 0
-			},
-			ball_initial_position : {
-				x 	: 0,
-				y 	: 0,
-				z 	: 0
 			},
 			azerty_keys : {
 				up 		: 90,

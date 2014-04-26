@@ -97,16 +97,16 @@ function createProgram(g, vertexShaderSource, fragmentShaderSource) {
 
 function setBuffer (p_config, p_position, p_positionBuffer, vertices) {
 
-    p_positionBuffer = p_positionBuffer || p_config.gl.createBuffer();
-    
-    p_config.gl.bindBuffer(p_config.gl.ARRAY_BUFFER, p_positionBuffer);
-    
-    if (vertices) {
-        p_config.gl.bufferData(p_config.gl.ARRAY_BUFFER, new Float32Array(vertices), p_config.gl.STATIC_DRAW);
-    }
-    p_config.gl.vertexAttribPointer(p_position, 2, p_config.gl.FLOAT, false, 0, 0);
-    
-    return p_positionBuffer;
+	p_positionBuffer = p_positionBuffer || p_config.gl.createBuffer();
+	
+	p_config.gl.bindBuffer(p_config.gl.ARRAY_BUFFER, p_positionBuffer);
+
+	if (vertices) {
+		p_config.gl.bufferData(p_config.gl.ARRAY_BUFFER, new Float32Array(vertices), p_config.gl.STATIC_DRAW);
+	}
+	p_config.gl.vertexAttribPointer(p_position, 2, p_config.gl.FLOAT, false, 0, 0);
+	
+	return p_positionBuffer;
 }
 
 
@@ -135,11 +135,11 @@ var pLocation=g.getAttribLocation(p,"p");
 g.bindBuffer(g.ARRAY_BUFFER,g.createBuffer());
 g.bufferData(g.ARRAY_BUFFER,new Float32Array(
   [-1,-1,
-    1,-1,
+	1,-1,
    -1, 1,
    -1, 1,
-    1,-1,
-    1, 1]),g.STATIC_DRAW);
+	1,-1,
+	1, 1]),g.STATIC_DRAW);
 g.enableVertexAttribArray(pLocation);
 g.vertexAttribPointer(pLocation,2,g.FLOAT,false,0,0);
 

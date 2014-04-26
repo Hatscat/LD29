@@ -7,10 +7,10 @@ function c_ball (p_config) {
 	** attributs
 	*/
 	this._config 	= p_config;
-	this.x 			= 0;
-	this.y 			= 0;
-	this.z 			= 0;
-	this.radius 	= this._config.ball_radius;
+	this.x 			= this._config.ball_params.initial_position.x;
+	this.y 			= this._config.ball_params.initial_position.x;
+	this.z 			= this._config.ball_params.initial_position.x;
+	this.radius 	= this._config.ball_params.radius;
 }
 
 /*
