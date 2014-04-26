@@ -33,7 +33,7 @@ c_player.prototype._check_inputs = function () {
 		//console.log(this._config.keys_down[this._config[this._config.keys_config][i1]]);
 		if (this._config.keys_down[this._config[this._config.keys_config][i1]])
 		{
-			console.log(i1);
+			//console.log(i1);
 
 			switch (i1)
 			{
@@ -108,11 +108,7 @@ function physics (that) {
 };
 
 c_player.prototype.getMass = function() {
-<<<<<<< HEAD
-	return this._config.player_mass;
-=======
-	return parseInt(this._config.player_mass);
->>>>>>> aff9e9e07497c9ebcbf5c3ceb2ee0793ef5a2bfd
+	return this._config.player_mass|0;
 };
 
 
