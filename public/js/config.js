@@ -30,7 +30,6 @@ function new_config (p_canvas) {
 			keys_config 			: 'azerty_keys',
 			player_params : {
 					radius 			: 0.9,
-					velocity 		: 0,
 					speed 			: 0.001,
 					mass		 	: 45,
 					initial_position : {
@@ -38,16 +37,25 @@ function new_config (p_canvas) {
 						y 			: 0.9,
 						z 			: 0.0
 				},
+					velocity : {
+						x			:0,
+						y			:0,
+						z			:0
+				}
 			},
 			ball_params : {
-					radius 			: 1.9,
-					velocity 		: 0,
+					radius 			: 6,
+					velocity 		: {
+						x			:0,
+						y			:0,
+						z			:0
+					},
 					speed 			: 2,
-					mass		 	: 1,
+					mass		 	: 2,
 					initial_position : {
-						x 			: 0.0,
-						y 			: 1.0,
-						z 			: 2.0
+						x 			: 0,
+						y 			: 30,
+						z 			: 0
 				},
 			},
 			net_params : {
