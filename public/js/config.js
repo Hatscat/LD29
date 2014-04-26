@@ -11,13 +11,6 @@ function new_config (p_canvas) {
 		var webgl_context = p_canvas.getContext('webgl', webgl_options)
 						 || p_canvas.getContext('experimental-webgl', webgl_options);
 		var config = {
-			gravity 				: 10,
-			player_radius 			: 10,
-			player_velocity 		: 2,
-			player_mass		 		: 45,
-			ball_radius 			: 3,
-			ball_velocity 			: 2,
-			ball_mass		 		: 1,
 			canvas_width 			: window.innerWidth / 2,
 			canvas_height 			: window.innerHeight / 2,
 			canvas 					: p_canvas,
@@ -31,7 +24,28 @@ function new_config (p_canvas) {
 			time 					: 0,
 			old_time 				: 0,
 			delta_time 				: 1,
+			gravity 				: 10,
 			keys_config 			: "azerty_keys",
+			player_params : {
+					radius 			: 10,
+					velocity 		: 0,
+					speed 			: 2,
+					mass		 	: 45
+			},
+			ball_params : {
+					radius 			: 3,
+					velocity 		: 0,
+					speed 			: 2,
+					mass		 	: 1
+			},
+			net_params : {
+					height 			: 5,
+					position : {
+						x			: 1,
+						y			: 0,
+						z 			: 1
+					}
+			},
 			player_initial_position : {
 				x 	: 0,
 				y 	: 0,
