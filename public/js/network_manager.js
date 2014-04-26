@@ -12,6 +12,7 @@ function new_player (p_config, p_data) {
 	} else {
 
 		p_config.player = new c_player(p_data[0], p_config);
+		p_config.ball = new c_ball(p_config);
 		sessionStorage.setItem('id', p_config.player.id);
 		run(p_config, p_config.time);
 

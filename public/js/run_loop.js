@@ -9,6 +9,7 @@ function run (p_config, p_timestamp) {
 	p_config.delta_time 	= elapsed_time * 0.06;
 
 	p_config.player.update();
+	p_config.ball.update();
 	
 
 	//
