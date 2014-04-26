@@ -3,22 +3,22 @@
 */
 function draw (p_config) {
 	
-	/*gl.uniform1f(gl.getUniformLocation(shaderProgram, 'time'), demo.currentTime * 0.001);
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'time'), p_config.time);
 
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'positionX'), player.x);
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'positionY'), player.y);
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'positionZ'), player.z);
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'angle'),     player.angle);
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'positionX'), p_config.player.x);
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'positionY'), p_config.player.y);
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'positionZ'), p_config.player.z);
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'angle'), 0); // p_config.player.angle
 	//console.log(parseFloat(sphereX))
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'sphereX'),   parseFloat(sphereX));
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'sphereY'),   parseFloat(sphereY));
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'sphereX'),   parseFloat(1.233));
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'sphereY'),   parseFloat(2.13));
 
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'pix2plot'), 2/(zoom * gl.viewportWidth));
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'cameraDx'), 1/zoom);
-	gl.uniform1f(gl.getUniformLocation(shaderProgram, 'cameraDy'), gl.viewportHeight / (gl.viewportWidth * zoom) );
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'pix2plot'), 2 / (p_config.gl.viewportWidth));
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'cameraDx'), 1);
+	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'cameraDy'), p_config.gl.viewportHeight / (p_config.gl.viewportWidth * 1) );
 
-	setBuffer(vertexPosition, vertexPositionBuffer);
-	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);*/
+	//setBuffer(p_config, vertexPosition, vertexPositionBuffer);
+	p_config.gl.drawArrays(p_config.gl.TRIANGLE_STRIP, 0, 6);
 }
 
 /*

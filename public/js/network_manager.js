@@ -13,6 +13,7 @@ function new_player (p_config, p_data) {
 
 		p_config.player = new c_player(p_data[0], p_config);
 		sessionStorage.setItem('id', p_config.player.id);
+		run(p_config, p_config.time);
 
 		for (var i1 in p_data[1])
 		{

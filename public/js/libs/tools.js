@@ -94,6 +94,22 @@ function createProgram(g, vertexShaderSource, fragmentShaderSource) {
 	return p;
 }
 
+
+function setBuffer (p_config, p_position, p_positionBuffer, vertices) {
+
+    p_positionBuffer = p_positionBuffer || p_config.gl.createBuffer();
+    
+    p_config.gl.bindBuffer(p_config.gl.ARRAY_BUFFER, p_positionBuffer);
+    
+    if (vertices) {
+        p_config.gl.bufferData(p_config.gl.ARRAY_BUFFER, new Float32Array(vertices), p_config.gl.STATIC_DRAW);
+    }
+    p_config.gl.vertexAttribPointer(p_position, 2, p_config.gl.FLOAT, false, 0, 0);
+    
+    return p_positionBuffer;
+}
+
+
 /*///////////////////////////////////////////////////////////////////////////////////
 var gl;
 // ... set up WebGL ...

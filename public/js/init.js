@@ -23,28 +23,27 @@ function init_game () {
 	var canvas = document.createElement('canvas');
 	var config = new_config(canvas);
 
-	manage_input_events(config.keys_down);
-	manage_server_events(config);
-	config.socket.emit('new', sessionStorage.getItem('id'));
 
 	loadFiles(['glsl/vertex_shader.glsl', 'glsl/fragment_shader.glsl'], function (shaderText) {
 
-		var program 	= createProgram(config.gl, shaderText[0], shaderText[1]);
-		var pLocation 	= config.gl.getAttribLocation(program, 'vertexPosition');
-		var tLocation	= config.gl.getUniformLocation(program,'time');
-		var vertex 		= [-1.0, 	-1.0,
-							1.0, 	-1.0,
-							-1.0, 	1.0,
-							-1.0, 	1.0,
-							1.0, 	-1.0,
-							1.0, 	1.0];
+		config.shader_program 	= createProgram(config.gl, shaderText[0], shaderText[1]);
+		config.vertex_location 	= config.gl.getAttribLocation(config.shader_program, 'vertexPosition');
+		config.time_location	= config.gl.getUniformLocation(config.shader_program,'time');
+		config.vertex 			= [-1.0, 	-1.0,
+									1.0, 	-1.0,
+									-1.0, 	1.0,
+									-1.0, 	1.0,
+									1.0, 	-1.0,
+									1.0, 	1.0];
 
 		config.gl.bindBuffer(config.gl.ARRAY_BUFFER, config.gl.createBuffer());
-		config.gl.bufferData(config.gl.ARRAY_BUFFER, new Float32Array(vertex), config.gl.STATIC_DRAW);
-		config.gl.enableVertexAttribArray(pLocation);
-		config.gl.vertexAttribPointer(pLocation, 2, config.gl.FLOAT, false, 0, 0);
+		config.gl.bufferData(config.gl.ARRAY_BUFFER, new Float32Array(config.vertex), config.gl.STATIC_DRAW);
+		config.gl.enableVertexAttribArray(config.vertex_location);
+		config.gl.vertexAttribPointer(config.vertex_location, 2, config.gl.FLOAT, false, 0, 0);
 
-		run(config, config.time);
+		manage_input_events(config.keys_down);
+		manage_server_events(config);
+		config.socket.emit('new', sessionStorage.getItem('id'));
 		document.body.appendChild(canvas);
 	},
 	function (url) {
