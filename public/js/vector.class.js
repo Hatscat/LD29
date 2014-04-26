@@ -2,6 +2,7 @@
 ** Vector 3D class
 */
 function c_vector (p_x, p_y, p_z) {
+	
 	/*
 	** attributs
 	*/
