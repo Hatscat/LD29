@@ -3,7 +3,7 @@
 */
 function new_config (p_canvas) {
 
-	var size_ratio 					= 4;
+	var size_ratio 					= 2;
 
 	try {
 		var webgl_options = {
@@ -29,14 +29,14 @@ function new_config (p_canvas) {
 			gravity 				: 10,
 			keys_config 			: 'azerty_keys',
 			player_params : {
-					radius 			: 1.9,
+					radius 			: 0.9,
 					velocity 		: 0,
-					speed 			: 2,
+					speed 			: 0.001,
 					mass		 	: 45,
 					initial_position : {
-						x 			: 1.99,
-						y 			: 0.5,
-						z 			: 1.0
+						x 			: 6.0,
+						y 			: 0.9,
+						z 			: 0.0
 				},
 			},
 			ball_params : {
@@ -53,16 +53,16 @@ function new_config (p_canvas) {
 			net_params : {
 					height 			: 5,
 					position : {
-						x			: 1,
-						y			: 0,
-						z 			: 1
+						x			: 13.0,
+						y			: 0.9,
+						z 			: 0.0
 					}
 			},
 			camera_params : {
 					position : {
-						x			: 1.0,
+						x			: 0.0,
 						y			: 1.0,
-						z 			: 1.0
+						z 			: 0.0
 					},
 					direction : {
 						x			: 1.0,
@@ -96,7 +96,6 @@ function new_config (p_canvas) {
 		p_canvas.width = config.canvas_width;
 		p_canvas.height = config.canvas_height;
 
-		console.log(config.gl)
 		config.gl.viewport(0, 0, config.gl.canvas.width, config.gl.canvas.height);
 		return config;
 
