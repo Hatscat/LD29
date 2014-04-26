@@ -2,7 +2,7 @@
 ** Vector 3D class
 */
 
-var Vector = function(x, y, z) {
+var c_vector = function(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -28,7 +28,7 @@ var Vector = function(x, y, z) {
     
     
     this.halfVector = function(vec) {
-        return new Vector(
+        return new c_vector(
             this.getX() + (vec.getX() - this.getX()) / 2,
             this.getY() + (vec.getY() - this.getY()) / 2,
             this.getZ() + (vec.getZ() - this.getZ()) / 2
@@ -40,15 +40,15 @@ var Vector = function(x, y, z) {
     };
     
     this.addVector = function(vec) {
-        return new Vector(this.getX() + vec.getX(), this.getY() + vec.getY() , this.getZ() + vec.getZ());
+        return new c_vector(this.getX() + vec.getX(), this.getY() + vec.getY() , this.getZ() + vec.getZ());
     };
     
     this.subtractVector = function(vec) {
-        return new Vector(this.getX() - vec.getX(), this.getY() - vec.getY() , this.getZ() - vec.getZ());
+        return new c_vector(this.getX() - vec.getX(), this.getY() - vec.getY() , this.getZ() - vec.getZ());
     };
     
     this.multiply = function(scalar) {
-        return new Vector(
+        return new c_vector(
             this.getX() * scalar,
             this.getY() * scalar,
             this.getZ() * scalar
@@ -56,7 +56,7 @@ var Vector = function(x, y, z) {
     };
     
     this.multiplyVector = function(vec) {
-        return new Vector(
+        return new c_vector(
             this.getX() * vec.getX(),
             this.getY() * vec.getY(),
             this.getZ() * vec.getZ()
@@ -64,7 +64,7 @@ var Vector = function(x, y, z) {
     };
     
     this.divide = function(scalar) {
-        return new Vector(
+        return new c_vector(
             this.getX() / scalar,
             this.getY() / scalar,
             this.getZ() / scalar
@@ -72,7 +72,7 @@ var Vector = function(x, y, z) {
     };
     
     this.invert = function(scalar) {
-        return new Vector(
+        return new c_vector(
             -this.getX(),
             -this.getY(),
             -this.getZ()
@@ -97,17 +97,17 @@ var Vector = function(x, y, z) {
     };
     */
     this.reflectX = function() {
-        return new Vector(-this.getX(), this.getY(), this.getZ());
+        return new c_vector(-this.getX(), this.getY(), this.getZ());
     };
     
     this.reflectY = function() {
-        return new Vector(this.getX(), -this.getY(), this.getZ());
+        return new c_vector(this.getX(), -this.getY(), this.getZ());
     };
     this.reflectZ = function() {
-        return new Vector(this.getX(), this.getY(), -this.getZ());
+        return new c_vector(this.getX(), this.getY(), -this.getZ());
     };
     this.scale = function(factor) {
-        return new Vector(
+        return new c_vector(
             this.getX() * factor,
             this.getY() * factor,
             this.getZ() * factor
@@ -115,7 +115,7 @@ var Vector = function(x, y, z) {
     };
     
     this.scaleX = function(factor) {
-        return new Vector(
+        return new c_vector(
             this.getX() * factor,
             this.getY(),
             this.getZ()
@@ -123,14 +123,14 @@ var Vector = function(x, y, z) {
     };
     
     this.scaleY = function(factor) {
-        return new Vector(
+        return new c_vector(
             this.getX(),
             this.getY() * factor,
             this.getZ()
         );
     };
     this.scaleZ = function(factor) {
-        return new Vector(
+        return new c_vector(
             this.getX(),
             this.getY(),
             this.getZ() * factor
@@ -143,12 +143,12 @@ var Vector = function(x, y, z) {
     this.normalise = function() {
 	var fLength = this.getLength();
     	if (fLength > 1e-08)
-    		return new Vector(this.getX() / fLength, this.getY() / fLength);	
+    		return new c_vector(this.getX() / fLength, this.getY() / fLength);	
     	return this.clone(); // Might cause issues in IE.
     };
     */
     this.clone = function() {
-        return new Vector(this.getX(), this.getY(), this.getZ());
+        return new c_vector(this.getX(), this.getY(), this.getZ());
     };
 
     this.contraVector = function() {

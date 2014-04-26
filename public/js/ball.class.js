@@ -11,6 +11,11 @@ function c_ball (p_config) {
 	this.y 			= 0;
 	this.z 			= 0;
 	this.radius 	= this._config.ball_radius;
+	this.vector = new c_vector(0,0,0);
+	this.velocity 	={};
+	this.velocity.x =0;
+	this.velocity.y =0;
+	this.velocity.z =0;
 }
 
 /*
@@ -23,6 +28,5 @@ c_ball.prototype._move = function () {
 };
 
 c_ball.prototype.update = function () {
-
-	this._move();
+	physics(this);
 };
