@@ -88,14 +88,6 @@ var c_vector = function(x, y, z) {
             &&  this.getX() * vec.getZ() - this.getZ() * vec.getX() === 0
             &&  this.getY() * vec.getZ() - this.getZ() * vec.getY() === 0;
     };
-    /*
-    this.reflect = function(vec) {
-        var newVec     = vec.multiply(2);
-        var dotProduct = this.dotProduct(vec);
-        newVec = newVec.multiply(dotProduct);
-        return this.subtractVector(newVec);
-    };
-    */
     this.reflectX = function() {
         return new c_vector(-this.getX(), this.getY(), this.getZ());
     };
@@ -139,14 +131,14 @@ var c_vector = function(x, y, z) {
     this.getLength = function() {
         return Math.sqrt(Math.pow(this.getX(), 2.0) + Math.pow(this.getY(), 2.0)+ Math.pow(this.getZ(), 2.0));
     };
-    /*
+
     this.normalise = function() {
 	var fLength = this.getLength();
     	if (fLength > 1e-08)
-    		return new c_vector(this.getX() / fLength, this.getY() / fLength);	
+    		return new c_vector(this.getX() / fLength, this.getY() / fLength, this.getZ() / fLength);	
     	return this.clone(); // Might cause issues in IE.
     };
-    */
+
     this.clone = function() {
         return new c_vector(this.getX(), this.getY(), this.getZ());
     };
