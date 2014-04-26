@@ -17,13 +17,3 @@ function c_ghost (p_id, p_config) {
 /*
 ** methods
 */
-c_ghost.prototype._move = function () {
-
-
-};
-
-c_ghost.prototype.update = function () {
-
-	this._move();
-
-};
