@@ -36,19 +36,19 @@ c_player.prototype._check_inputs = function () {
 			switch (i1)
 			{
 				case 'up' :
-					this._move(new Vector(_config.player_velocity,0,0));
+					this._move(new Vector(this._config.player_velocity,0,0));
 				break;
 				case 'down' :
-					this._move(new Vector(-_config.player_velocity,0,0));
+					this._move(new Vector(-this._config.player_velocity,0,0));
 				break;
 				case 'left' :
-					this._move(new Vector(0,0,-_config.player_velocity));
+					this._move(new Vector(0,0,-this._config.player_velocity));
 				break;
 				case 'right' :
-					this._move(new Vector(0,0,_config.player_velocity));
+					this._move(new Vector(0,0,this._config.player_velocity));
 				break;
 				case 'jump' :
-					this._move(new Vector(0,_config.player_velocity,0));
+					this._move(new Vector(0,this._config.player_velocity,0));
 				break;
 			}
 			console.log("Vector =" + this.Vector.getX() + " " + this.Vector.getY() + " " + this.Vector.getZ());
@@ -84,9 +84,8 @@ function kineticEnergy(that) {
     return 0.5 * that.mass * Math.pow(that.velocity.length(), 2);  // Kinetic Energy = 1/2  mass * v^2
 };
 
-function MecaniqueEnergy(that)
-{
-	return MecaniqueEnergy(that) + kineticEnergy(that);
+function MecaniqueEnergy(that) {
+	return potentialEnergy(that) + kineticEnergy(that);
 };
 
 move = function (deltaTime) {

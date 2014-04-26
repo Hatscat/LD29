@@ -16,7 +16,7 @@ app.use(express.static(__dirname + '/public'));
 io.sockets.on('connection', function (p_socket)
 {
 	p_socket.on('new', function(e){on_connection(p_socket,e)});
-	p_socket.on('move', on_move);
+	p_socket.on('move', function(e){on_move(p_socket,e)});
 	p_socket.on('disconnect', function(){on_deconnection(p_socket)});
 });
 
@@ -34,9 +34,9 @@ function on_connection (p_socket, p_data) {
 	console.log('--- player ' + p_socket.cli_id + ' is connected ---');
 }
 
-function on_move (p_data) {
+function on_move (p_socket, p_data) {
 
-	io.sockets.broadcast.emit('move', p_data);
+	p_socket.broadcast.emit('move', p_data);
 }
 
 function on_deconnection (p_socket) {
