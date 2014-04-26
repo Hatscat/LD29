@@ -56,7 +56,7 @@ function init_game () {
 function manage_input_events (p_keys_down) {
 
 	addEventListener('keydown', function (e) {
-		console.log(e.keyCode);
+		//console.log(e.keyCode);
 		p_keys_down[e.keyCode] = true;
 	}, false);
 	addEventListener('keyup', function (e) {

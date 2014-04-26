@@ -37,7 +37,7 @@ c_player.prototype._check_inputs = function () {
 		//console.log(this._config.keys_down[this._config[this._config.keys_config][i1]]);
 		if (this._config.keys_down[this._config[this._config.keys_config][i1]])
 		{
-			console.log(i1);
+			//console.log(i1);
 
 			switch (i1)
 			{
