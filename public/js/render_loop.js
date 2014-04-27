@@ -13,8 +13,8 @@ function draw (p_config) {
 	p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'cam_pos'), p_config.camera_params.position.x, p_config.camera_params.position.z, p_config.camera_params.position.y);
 	//p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'cam_dir'), p_config.camera_params.direction.x, p_config.camera_params.direction.z, p_config.camera_params.direction.y);
 	p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'net_pos'), p_config.net_params.position.x, p_config.net_params.position.z, p_config.net_params.position.y);
-	p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'ball_pos'), p_config.ball.x, p_config.ball.z, p_config.ball.y);
-	p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'player_pos'), p_config.player.x, p_config.player.z, p_config.player.y);
+	p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'ball_pos'), p_config.ball.position.x, p_config.ball.position.z, p_config.ball.position.y);
+	p_config.gl.uniform3f(p_config.gl.getUniformLocation(p_config.shader_program, 'player_pos'), p_config.player.position.x, p_config.player.position.z, p_config.player.position.y);
 	p_config.gl.uniform3fv(p_config.gl.getUniformLocation(p_config.shader_program, 'ghosts_pos'), ghosts_pos_array);
 	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'net_height'), p_config.net_params.height);
 	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'ball_radius'), p_config.ball.radius);
@@ -22,7 +22,6 @@ function draw (p_config) {
 	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'time'), p_config.time);
 
 
-	//p_config.gl.viewport(0, 0, p_config.gl.canvas.width, p_config.gl.canvas.height);
 	setBuffer(p_config, p_config.vertex_location, p_config.vertex_buffer);
 	p_config.gl.drawArrays(p_config.gl.TRIANGLE_STRIP, 0, 4);
 }

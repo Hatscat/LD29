@@ -6,72 +6,98 @@ function c_ball (p_config) {
 	/*
 	** attributs
 	*/
-	this._config 	= p_config;
-	this.x 			= p_config.ball_params.initial_position.x;
-	this.y 			= p_config.ball_params.initial_position.y;
-	this.z 			= p_config.ball_params.initial_position.z;
-	this.radius 	= p_config.ball_params.radius;
+	this._config 			= p_config;
+	this.radius 			= p_config.ball_params.radius;
+	this.can_apply_gravity 	= false;
+	this.can_collide 		= true;
+
+	this.position = {
+		x : p_config.ball_params.initial_position.x,
+		y : p_config.ball_params.initial_position.y,
+		z : p_config.ball_params.initial_position.z
+	};
+
+	this.velocity = {
+		x : 0,
+		y : 0,
+		z : 0
+	};
 }
 
 /*
 ** methods
 */
 
-c_ball.prototype._move = function () {
+c_ball.prototype._apply_edge_limits = function () {
 
-	var speed = this._config.ball_velocity * this._config.delta_time;
-	//this.x = ... * speed;
-};
+	for (var i1 in this.velocity) {
 
-rtest = false;
-c_ball.prototype.update = function () {
+		var min = this._config.ground_limits[i1 + '_min'] + this.radius;
+		var max = this._config.ground_limits[i1 + '_max'] - this.radius;
 
-
-	if(rtest)
-	{
-		rtest = false;
-		this.velocity.x = 200;
-		this.velocity.y = 30 * 20;
-		this.velocity.z = 200;
+		if (this.position[i1] < min)
+		{
+			this.position[i1] = min;
+			this.velocity[i1] = -this.velocity[i1] * this._config.ground_friction;
+		}
+		else if (this.position[i1] > max)
+		{
+			this.position[i1] = max;
+			this.velocity[i1] = -this.velocity[i1] * this._config.ground_friction;
+		}
 	}
-
-	this.move();
 };
 
-c_ball.prototype.getMass = function() {
-	return this._config.ball_params.mass;
-};
-c_ball.prototype.move = function () {
-// on applique la gravité
-if(this.vector.getY() > 0){
-	this.velocity.y -= this._config.gravity * this._config.delta_time;
-}
-//	on applique la reaction
-if(this.vector.getY() < 0)
-{
-	this.velocity.x /= 2;
-	this.velocity.z /= 2;
-	if(this.velocity.y >= this.getMass() || -this.getMass() >= this.velocity.y){
-		this.velocity.y = - this.velocity.y * 1/2;
+c_ball.prototype._player_collision = function () {
+
+	var distance_2_player = vector_pos_dif(this.position, this._config.player.position);
+
+	if (vector_length(distance_2_player) < this.radius + this._config.player.radius)
+	{
+		if (this.can_collide)
+		{
+			this.can_collide = false;
+			this.can_apply_gravity = true;
+
+			this.velocity = find_vector_end(
+				this._config.player.velocity,
+				find_vector_end(
+					this.velocity,
+					vector_scale(
+						vector_xyz_normalize(
+							vector_pos_dif(
+								this.position,
+								this._config.player.position
+							)
+						),
+						this._config.ball_params.friction
+					)
+				)
+			);
+			console.log('collision !', this.velocity);
+		}
 	}
 	else
 	{
-		this.vector.y = 0;
-		this.velocity.y = 0;
+		this.can_collide = true;
 	}
-}
+};
 
-//	on arrondi les force
-	this.velocity.x = this.velocity.x|0;
-	this.velocity.y = this.velocity.y|0;
-	this.velocity.z = this.velocity.z|0;
+c_ball.prototype._move = function () {
 
+	for (var i1 in this.velocity) {
+		
+		if (i1 == 'y' && this.can_apply_gravity) {
+			this.velocity[i1] -= this._config.gravity * this._config.delta_time;
+		}
+		
+		this.position[i1] += this.velocity[i1];
+	}
+};
 
-	console.log("ball : " + this.vector.getX() +" : "+ this.vector.getY() +" : "+ this.vector.getZ() + " : " +this.velocity.y);
-//	on applique les force
-	this.vector = this.vector.addVector(new c_vector(this.velocity.x,this.velocity.y,this.velocity.z));
-	this.x = this.vector.getX();
-	this.y = this.vector.getY();
-	this.z = this.vector.getZ();
+c_ball.prototype.update = function () {
 
+	this._apply_edge_limits();
+	this._player_collision();
+	this._move();
 };

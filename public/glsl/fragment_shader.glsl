@@ -18,7 +18,7 @@ uniform float time;
 
 const int iteration_max 	= 250;
 const float edge_detail 	= 0.01;
-const float distance_max	= 60.0;
+const float distance_max	= 50.0;
 //const float PI 				= 3.14159265;
 const vec3 bg_color 		= vec3(0.0, 0.0, 0.0);
 const vec3 ground_color_1 	= vec3(0.15, 0.07, 0.0);
@@ -31,26 +31,7 @@ float rand (vec2 coord)
 }
 
 /*
-** distance operations
-*/
-
-float op_union (in float p_A, in float p_B)
-{
-	return min(p_A, p_B);
-}
-
-float op_substract (in float p_A, in float p_B)
-{
-	return max(-p_A, p_B);
-}
-
-float op_intersect (in float p_A, in float p_B)
-{
-	return max(p_A, p_B);
-}
-
-/*
-** primitives
+** sphere primitive
 */
 
 float sphere (in vec3 p_A, in vec3 p_B, in float p_radius)
@@ -58,28 +39,22 @@ float sphere (in vec3 p_A, in vec3 p_B, in float p_radius)
   return length(p_A - p_B) - p_radius;
 }
 
-float plane (in vec3 p_A, in vec3 p_B, in vec4 n)
-{
-  // n must be normalized
-  return dot(p_A - p_B, n.xyz) + n.w;
-}
-
-
 /*
 ** return the first element founded
 */
 
 float distance_field (in vec3 p) {
 
-	//return min(length(pos - sphereCentre) - sphereRadius, pos.y - sin(pos.x + time) * sin(pos.z) * waveAmplitude);
-
 	return min(
 		sphere(p, player_pos, player_radius),
 		min(
-			floor(length(p - net_pos)) - sin(p.x) * sin(p.x) + p.z,
-			floor(mod(p.z, 1.5) + 0.5) - sin(p.y) * sin(p.y)
+			sphere(p, ball_pos, ball_radius),
+			min(
+				floor(length(p - net_pos)) - sin(p.x) * sin(p.x) + p.z,
+				floor(mod(p.z, 1.5) + 0.5) - sin(p.y) * sin(p.y)
 			)
-		);
+		)
+	);
 }
 
 /*
@@ -88,9 +63,7 @@ float distance_field (in vec3 p) {
 
 vec3 get_color (float p_x, float p_y)
 {
-
-	//return vec3(0.5);
-	vec3 dir 						= normalize(vec3(5.0, p_x, p_y * 0.5)); // + / -
+	vec3 dir 						= normalize(vec3(5.0, p_x, p_y * 0.5));
 	vec3 ray_pos 					= cam_pos;
 	float d 						= 0.0;
 	bool max_iterations_reached 	= true;
@@ -114,11 +87,9 @@ vec3 get_color (float p_x, float p_y)
 	 	return bg_color;
 	}
 
-	float light = min(1.0, 0.014 * pow(distance_max / (length(ray_pos - cam_pos) + 0.1), 1.9));
+	float light = 0.02 * pow(distance_max / (length(ray_pos - cam_pos) + 0.1), 2.0);
 
-	//if (mod(floor(mod(ray_pos.x, 2.0)) + floor(mod(ray_pos.y, 2.0)), 2.0) < 1.0)
-	//if (mod(ray_pos.x * ray_pos.y, 2.0) < 1.0)
-	if (mod(ray_pos.x * ray_pos.y, 2.0) < 1.5 && rand(vec2(sin(ray_pos.x + time), ray_pos.y)) > 0.8)
+	if (mod(ray_pos.x * sin(time * 0.001) * ray_pos.y, 2.0) < 1.0 && rand(vec2(sin(ray_pos.x + time), ray_pos.y)) > 0.8)
 	{
 		return ground_color_1 * light;
 	}
