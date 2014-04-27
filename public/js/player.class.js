@@ -3,8 +3,6 @@
 */
 function c_player (p_id, p_config) {
 
-	//var that 		= this;
-
 	/*
 	** attributs
 	*/
@@ -14,99 +12,82 @@ function c_player (p_id, p_config) {
 	this.y 			= this._config.player_params.initial_position.y;
 	this.z 			= this._config.player_params.initial_position.z;
 	this.radius 	= this._config.player_params.radius;
-	this.vector		= new c_vector(this.x,this.y,this.z);
-	this.velocity 	= new c_vector(	p_config.player_params.velocity.x,
-									p_config.player_params.velocity.y,
-									p_config.player_params.velocity.z
-									);
-	this.velocity.x = 0;
-	this.velocity.y = 0;
-	this.velocity.z = 0;
+	this.on_ground 	= true;
+
+	this.current_direction = {
+		x : 0,
+		y : 0,
+		z : 0
+	};
+
+	this.current_velocity = {
+		x : 0,
+		y : 0,
+		z : 0
+	};
 }
+
 /*
 ** methods
 */
 
+c_player.prototype._check_key = function (p_key) {
+
+	return this._config.keys_down[this._config[this._config.keys_config][p_key]];
+}
+
 c_player.prototype._check_inputs = function () {
 
-	var speed = this._config.player_velocity * this._config.delta_time;
-	//this.x = ... * speed;
-	for (var i1 in this._config[this._config.keys_config])
+	if (this.on_ground)
 	{
-		//console.log(i1 + ":"+this._config[this._config.keys_config][i1]);
-		//console.log(this._config.keys_down[this._config[this._config.keys_config][i1]]);
-		if (this._config.keys_down[this._config[this._config.keys_config][i1]])
-		{
-			//console.log(i1);
+		this.current_direction.x = -this._check_key('down') | this._check_key('up') | 0;
+		this.current_direction.z = -this._check_key('left') | this._check_key('right') | 0;
+		this.current_direction.y =  this._check_key('jump') * this._config.player_params.jump_strength | 0;
+	}
+};
 
-			switch (i1)
-			{
-				case 'up' :
-					this.velocity.x = 10;
-				break;
-				case 'down' :
-					this.velocity.x = -10;
-				break;
-				case 'left' :
-					this.velocity.z = -10;
-				break;
-				case 'right' :
-					this.velocity.z = 10;
-				break;
-				case 'jump' :
-					if(this.vector.getY() === 0){
-	 					this.velocity.y += 50;
-					}
-				break;
-			}
+c_player.prototype._is_on_ground = function () {
+
+	return this.y - this._config.ground_limits.y_min - this.radius < 0;
+};
+
+
+c_player.prototype._apply_edge_limits = function () {
+
+	for (var i1 in this.current_velocity) {
+
+		var min = this._config.ground_limits[i1 + '_min'] + this.radius;
+		var max = this._config.ground_limits[i1 + '_max'] - this.radius;
+
+		this[i1] = this[i1] < min ? min : this[i1] > max ? max : this[i1];
+	}
+};
+
+c_player.prototype._move = function () {
+
+	var acceleration_mass_ratio = 1 + (1 / this._config.player_params.mass);
+	var decceleration_mass_ratio = 1 - (1 / this._config.player_params.mass);
+
+
+	for (var i1 in this.current_velocity) {
+		if (this.on_ground) {
+			this.current_velocity[i1] 	+= this.current_direction[i1]
+										* this._config.player_params.acceleration
+										* acceleration_mass_ratio
+										* (i1 == 'y' || this._config.delta_time);
+			this.current_velocity[i1] *= this._config.ground_friction * decceleration_mass_ratio;
+		} else if (i1 == 'y') {
+			this.current_velocity[i1] -= this._config.gravity * this._config.delta_time;
 		}
+		this[i1] += this.current_velocity[i1];
 	}
-
-	my_player_move(this._config); // event server
 };
+
 c_player.prototype.update = function () {
+
+	this.on_ground = this._is_on_ground();
 	this._check_inputs();
-	this.move();
-};
-
-c_player.prototype.move = function () {
-// on applique la gravité
-if(this.vector.getY() > 0){
-	this.velocity.y -= this._config.gravity * this._config.delta_time;
-}
-//	on applique la reaction
-if(this.vector.getY() < 0)
-{
-	if(this.velocity.y >= this.getMass() || -this.getMass() >= this.velocity.y){
-		this.velocity.y = - (this.velocity.y - this.vector.getY());
-	}
-	else
-	{
-		this.vector.y = 0;
-		this.velocity.y = 0;
-	}
-}
- 
-// force de frotement
-if(this.vector.getY() <= 0)
-{
-	this.velocity.x /= 2;
-	this.velocity.z /= 2;
-}
-//	on arrondi les force
-	this.velocity.x = this.velocity.x|0;
-	this.velocity.y = this.velocity.y|0;
-	this.velocity.z = this.velocity.z|0;
-
-
-//	on applique les force
-	this.vector = this.vector.addVector(new c_vector(this.velocity.x,this.velocity.y,this.velocity.z));
-	this.x = this.vector.getX();
-	this.y = this.vector.getY();
-	this.z = this.vector.getZ();
-
-};
-
-c_player.prototype.getMass = function() {
-	return this._config.player_params.mass;
+	this._move();
+	this._apply_edge_limits();
+	my_player_move(this._config); // event server
 };

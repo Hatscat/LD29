@@ -26,32 +26,24 @@ function new_config (p_canvas) {
 			time 					: 0,
 			old_time 				: 0,
 			delta_time 				: 1,
-			gravity 				: 10,
+			gravity 				: 0.0025,
+			ground_friction			: 0.95,
 			keys_config 			: 'azerty_keys',
 			player_params : {
-					radius 			: 0.9,
-					speed 			: 0.001,
+					radius 			: 0.1,
+					acceleration 	: 0.002,
+					jump_strength 	: 25.0,
 					mass		 	: 45,
 					initial_position : {
-						x 			: 6.0,
+						x 			: 5.0,
 						y 			: 0.9,
 						z 			: 0.0
-				},
-					velocity : {
-						x			:0,
-						y			:0,
-						z			:0
 				}
 			},
 			ball_params : {
-					radius 			: 6,
-					velocity 		: {
-						x			:0,
-						y			:0,
-						z			:0
-					},
-					speed 			: 2,
-					mass		 	: 2,
+					radius 			: 0.02,
+					acceleration 	: 2,
+					mass		 	: 0.2,
 					initial_position : {
 						x 			: 0,
 						y 			: 30,
@@ -61,10 +53,18 @@ function new_config (p_canvas) {
 			net_params : {
 					height 			: 5,
 					position : {
-						x			: 13.0,
+						x			: 11.0,
 						y			: 0.9,
 						z 			: 0.0
-					}
+					},
+			},
+			ground_limits : {
+					x_min			: 1.0,
+					x_max			: 8.0,
+					y_min			: 0.74,
+					y_max			: 2.0,
+					z_min			: -0.8,
+					z_max			: 0.8
 			},
 			camera_params : {
 					position : {

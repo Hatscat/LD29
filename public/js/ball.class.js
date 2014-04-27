@@ -11,11 +11,6 @@ function c_ball (p_config) {
 	this.y 			= p_config.ball_params.initial_position.y;
 	this.z 			= p_config.ball_params.initial_position.z;
 	this.radius 	= p_config.ball_params.radius;
-	this.vector 	= new c_vector(this.x ,this.y ,this.z);
-	this.velocity 	= new c_vector(	this._config.ball_params.velocity.x,
-									this._config.ball_params.velocity.y,
-									this._config.ball_params.velocity.z
-									);
 }
 
 /*

@@ -2,15 +2,16 @@
 ** 3D physics functions
 */
 
-function collision(p_config)
+function collision (p_config)
 {
 	p_config.player.update();
 	p_config.ball.update();
-	dist = Math.sqrt(Math.pow(p_config.player.vector.x - p_config.ball.vector.x,2)
-					+Math.pow(p_config.player.vector.y - p_config.ball.vector.y,2)
-					+Math.pow(p_config.player.vector.z - p_config.ball.vector.z,2)
+	dist = Math.sqrt(Math.pow(p_config.player.vector.x - p_config.ball.vector.x, 2)
+					+Math.pow(p_config.player.vector.y - p_config.ball.vector.y, 2)
+					+Math.pow(p_config.player.vector.z - p_config.ball.vector.z, 2)
 					);
 	distCollision = p_config.player.radius + p_config.ball.radius;
+
 	if(dist < distCollision)
 	{
 		var velocity 	= new c_vector(0,0,0);

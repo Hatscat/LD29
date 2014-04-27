@@ -77,7 +77,7 @@ float distance_field (in vec3 p) {
 		sphere(p, player_pos, player_radius),
 		min(
 			floor(length(p - net_pos)) - sin(p.x) * sin(p.x) + p.z,
-			floor(mod(p.z, 2.0) + 0.5) - sin(p.y) * sin(p.y)
+			floor(mod(p.z, 1.5) + 0.5) - sin(p.y) * sin(p.y)
 			)
 		);
 }
@@ -88,7 +88,9 @@ float distance_field (in vec3 p) {
 
 vec3 get_color (float p_x, float p_y)
 {
-	vec3 dir 						= normalize(vec3(6.0, p_x, p_y)); // + / -
+
+	//return vec3(0.5);
+	vec3 dir 						= normalize(vec3(5.0, p_x, p_y * 0.5)); // + / -
 	vec3 ray_pos 					= cam_pos;
 	float d 						= 0.0;
 	bool max_iterations_reached 	= true;
@@ -112,11 +114,11 @@ vec3 get_color (float p_x, float p_y)
 	 	return bg_color;
 	}
 
-	float light = min(1.0, 0.04 * pow(distance_max / (length(ray_pos - cam_pos) + 0.1), 1.5));
+	float light = min(1.0, 0.014 * pow(distance_max / (length(ray_pos - cam_pos) + 0.1), 1.9));
 
 	//if (mod(floor(mod(ray_pos.x, 2.0)) + floor(mod(ray_pos.y, 2.0)), 2.0) < 1.0)
 	//if (mod(ray_pos.x * ray_pos.y, 2.0) < 1.0)
-	if (rand(vec2(sin(ray_pos.x + time), ray_pos.y)) > 0.5)
+	if (mod(ray_pos.x * ray_pos.y, 2.0) < 1.5 && rand(vec2(sin(ray_pos.x + time), ray_pos.y)) > 0.8)
 	{
 		return ground_color_1 * light;
 	}
