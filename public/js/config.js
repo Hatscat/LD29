@@ -29,6 +29,12 @@ function new_config (p_canvas) {
 			gravity 				: 0.002,
 			ground_friction			: 0.9,
 			keys_config 			: 'azerty_keys',
+			render_colors : [
+									0.1, 0.0, 0.2,		// le joueur
+									0.9, 0.1, 0.0,		// la balle
+									0.5, 0.5, 0.5,		// le fillet
+									0.4, 0.2, 0.0		// le sol
+			],
 			player_params : {
 					radius 			: 0.11,
 					acceleration 	: 0.005,
@@ -41,8 +47,8 @@ function new_config (p_canvas) {
 				}
 			},
 			ball_params : {
-					radius 			: 0.11,
-					friction 		: 0.1,
+					radius 			: 0.09,
+					friction 		: 0.07,
 					bounce_ratio 	: 0.9,
 					mass		 	: 1,
 					initial_position : {

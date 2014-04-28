@@ -20,6 +20,8 @@ function draw (p_config) {
 	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'ball_radius'), p_config.ball.radius);
 	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'player_radius'), p_config.player.radius);
 	p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'time'), p_config.time);
+	//p_config.gl.uniform1f(p_config.gl.getUniformLocation(p_config.shader_program, 'colors_nb'), p_config.render_colors.length);
+	//p_config.gl.uniform3fv(p_config.gl.getUniformLocation(p_config.shader_program, 'colors'), p_config.render_colors);
 
 
 	setBuffer(p_config, p_config.vertex_location, p_config.vertex_buffer);

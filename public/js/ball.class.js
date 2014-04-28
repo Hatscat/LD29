@@ -74,7 +74,7 @@ c_ball.prototype._player_collision = function () {
 					)
 				)
 			);
-			console.log('collision !', this.velocity);
+			//console.log('collision !', this.velocity);
 		}
 	}
 	else

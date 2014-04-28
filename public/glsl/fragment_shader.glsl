@@ -6,23 +6,33 @@
 
 varying vec2 coord;
 
+//uniform vec3 colors[5];
 uniform vec3 cam_pos;
 uniform vec3 net_pos;
 uniform vec3 ball_pos;
 uniform vec3 player_pos;
-uniform vec3 ghosts_pos;
+//uniform vec3 ghosts_pos;
 uniform float net_height;
 uniform float ball_radius;
 uniform float player_radius;
 uniform float time;
 
-const int iteration_max 	= 250;
+const int iteration_max 	= 200;
 const float edge_detail 	= 0.01;
 const float distance_max	= 50.0;
 //const float PI 				= 3.14159265;
-const vec3 bg_color 		= vec3(0.0, 0.0, 0.0);
-const vec3 ground_color_1 	= vec3(0.15, 0.07, 0.0);
-const vec3 ground_color_2 	= vec3(0.31, 0.15, 0.0);
+
+const vec3 color_bg 			= vec3(0.0, 0.0, 0.0);
+const vec3 color_player 		= vec3(0.1, 0.0, 0.2);
+const vec3 color_player_motif 	= vec3(0.0, 0.5, 0.0);
+const vec3 color_ball 			= vec3(0.9, 0.1, 0.0);
+const vec3 color_ball_motif 	= vec3(0.8, 0.2, 0.0);
+const vec3 color_net 			= vec3(0.5, 0.5, 0.5);
+const vec3 color_net_motif 		= vec3(0.9, 0.9, 0.0);
+const vec3 color_wall 			= vec3(0.4, 0.2, 0.0);
+const vec3 color_wall_motif 	= vec3(0.2, 0.1, 0.0);
+
+vec3 current_color;
 
 
 float rand (vec2 coord)
@@ -33,74 +43,99 @@ float rand (vec2 coord)
 /*
 ** sphere primitive
 */
-
 float sphere (in vec3 p_A, in vec3 p_B, in float p_radius)
 {
   return length(p_A - p_B) - p_radius;
 }
 
 /*
-** return the first element founded
+** return the first pixel of an element founded
 */
-
 float distance_field (in vec3 p) {
 
-	return min(
-		sphere(p, player_pos, player_radius),
-		min(
-			sphere(p, ball_pos, ball_radius),
-			min(
-				floor(length(p - net_pos)) - sin(p.x) * sin(p.x) + p.z,
-				floor(mod(p.z, 1.5) + 0.5) - sin(p.y) * sin(p.y)
-			)
-		)
-	);
+	float distance_min 	= distance_max;
+	float player 		= sphere(p, player_pos, player_radius);
+	float ball 			= sphere(p, ball_pos, ball_radius);
+	float net 			= floor(length(p - net_pos)) - sin(p.x) * sin(p.x) + p.z;
+	float wall 			= floor(mod(p.z, 1.5) + 0.5) - sin(p.y) * sin(p.y);
+
+	if (player < distance_min)
+	{
+		distance_min = player;
+		current_color = color_player - player * 10.0;
+	}
+	if (ball < distance_min)
+	{
+		distance_min = ball;
+
+		if (mod(sin(length(p)), 0.5) < 0.25)
+		{
+			current_color = color_ball_motif;
+		}
+		else
+		{
+			current_color = color_ball;
+		}
+	}
+	if (net < distance_min)
+	{
+		distance_min = net;
+
+		if (rand(vec2(p.x, p.y)) > 0.85)
+		{
+			current_color = color_net_motif;
+		}
+		else
+		{
+			current_color = color_net;
+		}
+	}
+	if (wall < distance_min)
+	{
+		distance_min = wall;
+		
+		if (mod(p.x * p.y * sin(time * 0.001), 2.0) < 1.0)
+		{
+			current_color = color_wall_motif;
+		}
+		else
+		{
+			current_color = color_wall;
+		}
+	}
+
+	return distance_min;
 }
 
 /*
-** return the color of a given pixel on screen
+** return the color of a given pixel on screen (vec3)
 */
-
 vec3 get_color (float p_x, float p_y)
 {
-	vec3 dir 						= normalize(vec3(5.0, p_x, p_y * 0.5));
-	vec3 ray_pos 					= cam_pos;
-	float d 						= 0.0;
-	bool max_iterations_reached 	= true;
+	vec3 dir 		= normalize(vec3(5.0, p_x, p_y * 0.5));
+	vec3 ray_pos 	= cam_pos;
+	float distance 	= 0.0;
 
 	for (int i = 0; i < iteration_max; i++)
 	{
-		d = distance_field(ray_pos);
+		distance = distance_field(ray_pos);
 
-		if (d < edge_detail)
+		if (distance < edge_detail)
 		{
-			max_iterations_reached = false;
 			break;
 		}
-		else if (length((ray_pos += d * dir) - cam_pos) > distance_max)
+		else if (length((ray_pos += distance * dir) - cam_pos) > distance_max)
 		{
-			return bg_color;
+			return color_bg;
 		}
 	}
 
-	if (max_iterations_reached) {
-	 	return bg_color;
-	}
-
-	float light = 0.02 * pow(distance_max / (length(ray_pos - cam_pos) + 0.1), 2.0);
-
-	if (mod(ray_pos.x * sin(time * 0.001) * ray_pos.y, 2.0) < 1.0 && rand(vec2(sin(ray_pos.x + time), ray_pos.y)) > 0.8)
-	{
-		return ground_color_1 * light;
-	}
-
-	return ground_color_2 * light;
+	return current_color * 0.02 * pow(distance_max / length(ray_pos - cam_pos), 2.0); // light
 }
 
 /*
 ** MAIN
 */
-
 void main (void)
 {
 	vec3 color 		= get_color(coord.x, coord.y);
